@@ -5,9 +5,11 @@ services:
     image: mongo:latest
     container_name: mongo
     ports:
-      - "27017:27017"
+      - "27015:27017"
     volumes:
       - mongo-data:/data/db
+    networks:
+      - custom-net
 
   app:
     build:
@@ -18,7 +20,15 @@ services:
     ports:
       - "8080:8080"
     environment:
+      - SPRING_PROFILES_ACTIVE=docker
       - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/product-service-db
+    volumes:
+      - ./src:/app/src  # Adjust this to match your project structure
+    networks:
+      - custom-net
 
 volumes:
   mongo-data:
+
+networks:
+  custom-net:
